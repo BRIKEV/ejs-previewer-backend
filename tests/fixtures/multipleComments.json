@@ -1,0 +1,48 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "ejs-previewer-backend",
+      "license": {
+        "name": "MIT"
+      }
+    },
+    "paths": {
+      "/api/v1/albums": {
+        "post": {
+          "deprecated": false,
+          "summary": "",
+          "security": [],
+          "responses": {},
+          "parameters": [],
+          "tags": [],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "description": "",
+            "required": true
+          }
+        },
+        "get": {
+          "deprecated": false,
+          "summary": "",
+          "security": [],
+          "responses": {},
+          "parameters": [],
+          "tags": []
+        }
+      }
+    },
+    "components": {
+      "schemas": {}
+    },
+    "tags": []
+}

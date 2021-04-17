@@ -1,0 +1,39 @@
+{
+  "name": "ejs-previewer-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "cross-env node index.js",
+    "test": "jest --detectOpenHandles --forceExit",
+    "lint": "./node_modules/.bin/eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BRIKEV/ejs-previewer-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BRIKEV/ejs-previewer-backend/issues"
+  },
+  "homepage": "https://github.com/BRIKEV/ejs-previewer-backend#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-jsdoc-swagger": "^1.5.0",
+    "helmet": "^4.4.1",
+    "morgan": "^1.10.0",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "eslint": "^7.24.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.3.5",
+    "jest": "^26.6.3",
+    "supertest": "^6.1.3"
+  }
+}
