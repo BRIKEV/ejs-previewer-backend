@@ -48,4 +48,8 @@ describe('Process openapi', () => {
         expect(res.body).toEqual(multipleComments);
       });
   });
+
+  it('Should throw error when payload is not send', () => request
+    .post('/api/v1/process-openapi')
+    .expect(400));
 });
