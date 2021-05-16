@@ -1,5 +1,6 @@
 module.exports = {
-  port: process.env.API_PORT || 3000,
+  // This variable must be "PORT" because is the one heroku uses
+  port: process.env.PORT || 3000,
   api: {
     swaggerOptions: {
       info: {
