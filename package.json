@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env node index.js",
+    "start": "cross-env NODE_ENV=production node index.js",
+    "start:dev": "cross-env node index.js",
     "test": "jest --detectOpenHandles --forceExit",
     "lint": "./node_modules/.bin/eslint ."
   },
