@@ -10,7 +10,7 @@ module.exports = {
           name: 'MIT',
         },
       },
-      filesPattern: './**/*.js',
+      filesPattern: './api/*.js',
       baseDir: __dirname,
     },
   },
