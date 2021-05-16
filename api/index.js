@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 const cors = require('cors');
 const expressJSDocSwagger = require('express-jsdoc-swagger');
+const { validateRequest, init } = require('express-oas-validator');
 const getComments = require('../utils/getComments');
 
 const config = require('../config.js');
@@ -13,8 +14,9 @@ let transformMethods = null;
 
 const serverApp = () => new Promise(resolve => {
   const instance = expressJSDocSwagger(app)(config.api.swaggerOptions);
-  instance.on('finish', (_, transforms) => {
+  instance.on('finish', (data, transforms) => {
     transformMethods = transforms;
+    init(data);
     resolve(app);
   });
   app.use(express.urlencoded({ extended: true }));
@@ -22,7 +24,17 @@ const serverApp = () => new Promise(resolve => {
   app.use(cors());
   app.use(helmet());
   app.use(morgan('tiny', { skip: () => process.env.NODE_ENV === 'test' }));
-  app.post('/api/v1/process-openapi', (req, res) => {
+  /**
+   * @typedef {object} ProcessRequest
+   * @property {string} payload.required - JSDOC payload
+   */
+
+  /**
+   * POST /api/v1/process-openapi
+   * @param {ProcessRequest} request.body.required - JSDOC payload object
+   * @return {object} 200 - success response
+   */
+  app.post('/api/v1/process-openapi', validateRequest(), (req, res) => {
     const { payload } = req.body;
     let swaggerObject = {
       openapi: '3.0.0',
