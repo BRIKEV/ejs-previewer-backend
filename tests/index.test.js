@@ -26,7 +26,8 @@ describe('Process openapi', () => {
         expect(res.body).toEqual(simpleResponse);
       });
   });
-  it('Should return swaggerObject correctly', () => {
+
+  it('Should return swaggerObject correctly when we send multiple ones', () => {
     const payload = `
     /**
      * POST /api/v1/albums
