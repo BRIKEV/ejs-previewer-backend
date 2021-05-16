@@ -22,6 +22,16 @@ const serverApp = () => new Promise(resolve => {
   app.use(cors());
   app.use(helmet());
   app.use(morgan('tiny', { skip: () => process.env.NODE_ENV === 'test' }));
+  /**
+   * @typedef {object} ProcessRequest
+   * @property {string} payload.required - JSDOC payload
+   */
+
+  /**
+   * POST /api/v1/process-openapi
+   * @param {ProcessRequest} request.body.required - JSDOC payload object
+   * @return {object} 200 - success response
+   */
   app.post('/api/v1/process-openapi', (req, res) => {
     const { payload } = req.body;
     let swaggerObject = {
