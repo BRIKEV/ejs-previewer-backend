@@ -52,4 +52,26 @@ describe('Process openapi', () => {
   it('Should throw error when payload is not send', () => request
     .post('/api/v1/process-openapi')
     .expect(400));
+
+  it('Should throw error when payload is not valid', () => {
+    const payload = `
+      /**
+       * POST /api/v1/albums
+       Invalid payload
+      `;
+    const body = { payload };
+    return request
+      .post('/api/v1/process-openapi')
+      .send(body)
+      .expect(400)
+      .expect('Content-Type', /json/)
+      .then(res => {
+        expect(res.body).toEqual({
+          message: 'Error: you send and invalid payload',
+          extra: {
+            invalidPayload: '\n      /**\n       * POST /api/v1/albums\n       Invalid payload\n      ',
+          },
+        });
+      });
+  });
 });

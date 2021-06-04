@@ -16,6 +16,7 @@ const logger = require('../utils/logger');
 const config = require('../config.js');
 
 const unauthorizedError = errorFactory(CustomErrorTypes.UNAUTHORIZED);
+const badRequestError = errorFactory(CustomErrorTypes.BAD_REQUEST);
 
 const app = express();
 
@@ -60,6 +61,11 @@ const serverApp = () => new Promise(resolve => {
     };
     try {
       const formattedPayload = getComments(payload);
+      if (formattedPayload.length === 0) {
+        throw badRequestError('Error: you send and invalid payload', {
+          invalidPayload: payload,
+        });
+      }
       const parsedJSDocs = transformMethods.jsdocInfo()(formattedPayload);
       swaggerObject = transformMethods.getPaths(swaggerObject, parsedJSDocs);
       swaggerObject = transformMethods.getComponents(swaggerObject, parsedJSDocs);
