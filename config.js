@@ -1,6 +1,7 @@
 module.exports = {
   // This variable must be "PORT" because is the one heroku uses
   port: process.env.PORT || 3000,
+  whitelist: [process.env.APP_HOST, `https://${process.env.DOCS_HOST}`],
   api: {
     swaggerOptions: {
       info: {

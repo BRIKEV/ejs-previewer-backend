@@ -4,9 +4,18 @@ const helmet = require('helmet');
 const cors = require('cors');
 const expressJSDocSwagger = require('express-jsdoc-swagger');
 const { validateRequest, init } = require('express-oas-validator');
-const getComments = require('../utils/getComments');
+const {
+  CustomErrorTypes,
+  errorFactory,
+  handleHttpError,
+  tagError,
+} = require('error-handler-module');
 
+const getComments = require('../utils/getComments');
+const logger = require('../utils/logger');
 const config = require('../config.js');
+
+const unauthorizedError = errorFactory(CustomErrorTypes.UNAUTHORIZED);
 
 const app = express();
 
@@ -19,10 +28,19 @@ const serverApp = () => new Promise(resolve => {
     init(data);
     resolve(app);
   });
+  const corsOptions = {
+    origin: (origin, callback) => {
+      if (config.whitelist.indexOf(origin) !== -1 || !origin) {
+        return callback(null, true);
+      }
+      logger.error(`CORS error for this origin ${origin}`);
+      return callback(unauthorizedError('Not allowed by CORS'));
+    },
+  };
+  app.use(cors(corsOptions));
+  app.use(helmet());
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
-  app.use(cors());
-  app.use(helmet());
   app.use(morgan('tiny', { skip: () => process.env.NODE_ENV === 'test' }));
   /**
    * @typedef {object} ProcessRequest
@@ -34,19 +52,25 @@ const serverApp = () => new Promise(resolve => {
    * @param {ProcessRequest} request.body.required - JSDOC payload object
    * @return {object} 200 - success response
    */
-  app.post('/api/v1/process-openapi', validateRequest(), (req, res) => {
+  app.post('/api/v1/process-openapi', validateRequest(), (req, res, next) => {
     const { payload } = req.body;
     let swaggerObject = {
       openapi: '3.0.0',
       info: config.api.swaggerOptions.info,
     };
-    const formattedPayload = getComments(payload);
-    const parsedJSDocs = transformMethods.jsdocInfo()(formattedPayload);
-    swaggerObject = transformMethods.getPaths(swaggerObject, parsedJSDocs);
-    swaggerObject = transformMethods.getComponents(swaggerObject, parsedJSDocs);
-    swaggerObject = transformMethods.getTags(swaggerObject, parsedJSDocs);
-    res.json(swaggerObject);
+    try {
+      const formattedPayload = getComments(payload);
+      const parsedJSDocs = transformMethods.jsdocInfo()(formattedPayload);
+      swaggerObject = transformMethods.getPaths(swaggerObject, parsedJSDocs);
+      swaggerObject = transformMethods.getComponents(swaggerObject, parsedJSDocs);
+      swaggerObject = transformMethods.getTags(swaggerObject, parsedJSDocs);
+      return res.json(swaggerObject);
+    } catch (error) {
+      return next(tagError(error));
+    }
   });
+
+  app.use(handleHttpError(logger));
 });
 
 module.exports = serverApp;
