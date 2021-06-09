@@ -49,9 +49,21 @@ const serverApp = () => new Promise(resolve => {
    */
 
   /**
+   * @typedef {object} Error
+   * @property {string} message.required - error message
+   * @property {ExtraInfo} extra - extra info
+   */
+
+  /**
+   * @typedef {object} ExtraInfo
+   * @property {string} invalidPayload
+   */
+
+  /**
    * POST /api/v1/process-openapi
    * @param {ProcessRequest} request.body.required - JSDOC payload object
    * @return {object} 200 - success response
+   * @return {Error} 500 - success response
    */
   app.post('/api/v1/process-openapi', validateRequest(), (req, res, next) => {
     const { payload } = req.body;
