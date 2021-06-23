@@ -23,12 +23,6 @@ const app = express();
 let transformMethods = null;
 
 const serverApp = () => new Promise(resolve => {
-  const instance = expressJSDocSwagger(app)(config.api.swaggerOptions);
-  instance.on('finish', (data, transforms) => {
-    transformMethods = transforms;
-    init(data);
-    resolve(app);
-  });
   const corsOptions = {
     origin: (origin, callback) => {
       if (config.whitelist.indexOf(origin) !== -1 || !origin) {
@@ -45,6 +39,12 @@ const serverApp = () => new Promise(resolve => {
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
   app.use(morgan('tiny', { skip: () => process.env.NODE_ENV === 'test' }));
+  const instance = expressJSDocSwagger(app)(config.api.swaggerOptions);
+  instance.on('finish', (data, transforms) => {
+    transformMethods = transforms;
+    init(data);
+    resolve(app);
+  });
   /**
    * @typedef {object} ProcessRequest
    * @property {string} payload.required - JSDOC payload
