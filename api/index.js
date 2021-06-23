@@ -38,10 +38,10 @@ const serverApp = () => new Promise(resolve => {
       return callback(unauthorizedError('Not allowed by CORS'));
     },
   };
-  app.use(cors(corsOptions));
   app.use(helmet({
     contentSecurityPolicy: false,
   }));
+  app.use(cors(corsOptions));
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
   app.use(morgan('tiny', { skip: () => process.env.NODE_ENV === 'test' }));
