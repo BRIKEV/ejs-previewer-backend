@@ -39,7 +39,9 @@ const serverApp = () => new Promise(resolve => {
     },
   };
   app.use(cors(corsOptions));
-  app.use(helmet());
+  app.use(helmet({
+    contentSecurityPolicy: false,
+  }));
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
   app.use(morgan('tiny', { skip: () => process.env.NODE_ENV === 'test' }));
