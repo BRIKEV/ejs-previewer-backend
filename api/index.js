@@ -45,6 +45,7 @@ const serverApp = () => new Promise(resolve => {
     init(data);
     resolve(app);
   });
+  app.get('/', (req, res) => res.send('ejs-previewer-backend API'));
   /**
    * @typedef {object} ProcessRequest
    * @property {string} payload.required - JSDOC payload
